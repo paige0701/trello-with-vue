@@ -18,10 +18,20 @@
   </div>
 </template>
 <script>
+  import axios from 'axios'
   export default {
     methods: {
       fetchData() {
         this.loading = true;
+        axios.get('http://localhost:3000/health').then((res) => {
+          this.apiRes = res.data
+        }).catch((err) => {
+          this.error = err.response.data
+        }).finally(() => {
+          this.loading = false
+        })
+
+        /*
         const req = new XMLHttpRequest()
         req.open('GET', 'http://localhost:3000/health')
         req.send()
@@ -33,6 +43,7 @@
             response: JSON.parse(req.response)
           }
         })
+        */
       }
     },
     data() {
