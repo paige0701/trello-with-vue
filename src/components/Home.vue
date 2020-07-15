@@ -4,7 +4,9 @@
     Board list:
     <div v-if="loading">loading ...</div>
     <div v-else>
-      Api result: {{apiRes}}
+      <div v-for="b in boards" :key="b.id">
+        {{b}}
+      </div>
     </div>
     <ul>
       <li>
@@ -18,38 +20,22 @@
   </div>
 </template>
 <script>
-  import axios from 'axios'
+  import {board} from '../api'
   export default {
     methods: {
       fetchData() {
-        this.loading = true;
-        axios.get('http://localhost:3000/health').then((res) => {
-          this.apiRes = res.data
-        }).catch((err) => {
-          this.error = err.response.data
-        }).finally(() => {
-          this.loading = false
+        this.loading = true
+        board.fetch().then(data => {
+          this.boards = data
+        }).finally(_ => {
+        this.loading = false
         })
-
-        /*
-        const req = new XMLHttpRequest()
-        req.open('GET', 'http://localhost:3000/health')
-        req.send()
-        req.addEventListener('load', () => {
-          this.loading = false
-          this.apiRes = {
-            status: req.status,
-            statusText: req.statusText,
-            response: JSON.parse(req.response)
-          }
-        })
-        */
       }
     },
     data() {
       return {
         loading: false,
-        apiRes: ''
+        boards: [],
       }
     },
     created() {
