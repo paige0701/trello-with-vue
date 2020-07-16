@@ -19,7 +19,7 @@
   </div>
 </template>
 <script>
-  import {auth, setAuthInHeader} from '../api'
+  import {mapActions} from "vuex";
 
   export default {
     data() {
@@ -30,18 +30,16 @@
         rPath: ''
       }},
     methods: {
+      ...mapActions([
+        'LOGIN'
+      ]),
       onSubmit() {
-        auth.login(this.email, this.password)
-          .then((result) => {
-          localStorage.setItem('token', result.accessToken)
-          setAuthInHeader(result.accessToken)
+        this.LOGIN({email:this.email, password: this.password}).then(()=> {
           this.$router.push(this.rPath)
-
-        }).catch(err => {
+        }).catch(err=> {
           this.error = err.data.error
         })
-      }
-    },
+    }},
     computed: {
       invalidForm() {
         return !this.email || !this.password
