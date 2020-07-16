@@ -4,23 +4,27 @@ import router from '../router'
 const DOMAIN = 'http://localhost:3000'
 const UNAUTHORIZED = 401
 const onUnauthorized = () => {
-  router.push('/login')
+  router.push('/login?rPath=${encodeURIComponent(location.pathname)}')
 }
 const request = (method, url, data) => {
   return axios({
-    method, url: DOMAIN + url, data
-  }).then((result) => {
-    return result.data
-  }).catch(err => {
-    const {status} = err.response
-    if (status === UNAUTHORIZED) return onUnauthorized()
-    throw Error(err)
+    method,
+    url: DOMAIN + url,
+    data
+  }).then(result =>  result.data)
+    .catch(result => {
+    const {status} = result.response
+    if (status === UNAUTHORIZED) onUnauthorized()
+    throw result.response
   })
 }
 
 export const setAuthInHeader = token => {
   axios.defaults.headers.common['Authorization'] = token? `Bearer ${token}` : null
 }
+
+const {token} = localStorage
+if (token) setAuthInHeader(token)
 
 export const board = {
   fetch() {

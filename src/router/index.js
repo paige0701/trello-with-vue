@@ -5,6 +5,7 @@ import Login from '../components/Login'
 import NotFound from '../components/NotFound'
 import Board from '../components/Board'
 import Card from '../components/Card'
+
 Vue.use(VueRouter)
 
 const requireAuth = (to, from, next) => {
@@ -15,11 +16,21 @@ const requireAuth = (to, from, next) => {
 const router = new VueRouter({
   mode: 'history', // url 에 * 없앰
   routes :[
-    {path: '/', component: Home, beforeEnter: requireAuth},
-    {path: '/login', component: Login},
-    {path: '/b/:bid', component: Board , beforeEnter: requireAuth,
+    {
+      path: '/',
+      component: Home,
+      beforeEnter: requireAuth
+    },
+    {
+      path: '/login',
+      component: Login
+    },
+    {
+      path: '/b/:bid',
+      component: Board,
+      beforeEnter: requireAuth,
       children: [
-        {path: 'c/:cid', component: Card , beforeEnter: requireAuth}
+        {path: 'c/:cid', component: Card}
       ]},
     {path: '*', component: NotFound},
   ]
