@@ -1,12 +1,11 @@
 <template>
   <nav class="header">
     <div class="header-logo">
-      <router-link to="/home">Home</router-link>
+      <router-link to="/">Home</router-link>
     </div>
     <div class="header-auth">
-
-       <a v-if="isAuth" @click.prevent="logout()">Logout</a>
-      <router-link to="/login" v-else>Login</router-link>
+      <a v-if="isAuthenticated" href="" @click.prevent="logout">Logout</a>
+      <router-link v-else to="/login">Login</router-link>
     </div>
   </nav>
 </template>
@@ -15,8 +14,8 @@
 
   export default {
     computed: {
-      isAuth() {
-        return !!localStorage.getItem('token')
+      isAuthenticated() {
+        return localStorage.getItem('token')
       }
     },
     methods: {
@@ -24,6 +23,11 @@
         delete localStorage.token
         setAuthInHeader(null)
         this.$router.push('/login')
+      }
+    },
+    watch: {
+      isAuthenticated: (d) => {
+        this.isAuthenticated = d
       }
     }
   }
