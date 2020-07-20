@@ -30,11 +30,11 @@
     methods: {
       ...mapMutations(['SET_IS_ADD_BOARD']),
       ...mapActions([
-        'FETCH_BOARD'
+        'FETCH_BOARDS'
       ]),
       fetchData() {
         this.loading = true
-        this.FETCH_BOARD()
+        this.FETCH_BOARDS()
           .finally(_ => {
         this.loading = false
         })
