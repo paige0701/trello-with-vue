@@ -3,12 +3,30 @@
     <div class="list-header">
       <div class="list-header-title">{{data.title}}</div>
     </div>
+    <div v-if="isAddCard">
+      <AddCard @close="isAddCard=false"></AddCard>
+    </div>
+    <div v-else>
+      <a href="" class="add-card-btn" @click.prevent="isAddCard=true">
+        &plus; Add a card..
+      </a>
+    </div>
   </div>
 </template>
 
 <script>
+  import AddCard from './AddCard'
   export default {
     props: ['data'],
+    components: {
+      AddCard
+    },
+    data() {
+      return {
+        isAddCard: false
+      }
+
+    }
   }
 </script>
 
