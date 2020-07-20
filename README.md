@@ -45,3 +45,6 @@ npm run build
 - 리스트 수정: 타이틀 변경
 - 리스트 이동
 - 리스트 삭제
+
+
+출저 : https://www.inflearn.com/course/vuejs#
