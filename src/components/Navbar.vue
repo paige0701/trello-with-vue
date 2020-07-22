@@ -10,18 +10,34 @@
   </nav>
 </template>
 <script>
-  import {mapGetters, mapMutations} from 'vuex'
+  import {mapGetters, mapMutations, mapState} from 'vuex'
   export default {
     computed: {
-      ...mapGetters(['isAuth'])
+      ...mapGetters(['isAuth']),
+      ...mapState({navbarColor: 'navbarColor', bodyColor: 'bodyColor'})
     },
     methods: {
       ...mapMutations(['LOGOUT']),
       logout() {
         this.LOGOUT()
         this.$router.push('/login')
+      },
+      updateTheme() {
+        this.$el.style.backgroundColor = this.navbarColor
+
+        const body = document.querySelector('body')
+        const container = document.querySelector('.container')
+        if (body) body.style.backgroundColor = this.bodyColor
+        if (container) container.style.backgroundColor = this.bodyColor
       }
+    },
+    mounted() {
+      this.updateTheme()
+    },
+    watch: {
+      'bodyColor': 'updateTheme'
     }
+
 
   }
 
