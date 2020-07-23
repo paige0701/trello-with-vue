@@ -11,7 +11,8 @@
 
         <div class="list-section-wrapper">
           <div class="list-section">
-            <div class="list-wrapper" v-for="list in board.lists" :key="list.pos">
+            <div class="list-wrapper" v-for="list in board.lists" :key="list.pos"
+            :data-list-id="list.id">
               <List :data="list"></List>
             </div>
             <div class="list-wrapper">
@@ -32,6 +33,18 @@
   import dragger from '../utils/dragger'
   import BoardSetting from './BoardSetting'
   export default {
+    created() {
+      this.fetchData().then(() => {
+        this.inputTitle = this.board.title
+        this.SET_THEME(this.board.bgColor)
+      })
+      this.SET_IS_SHOW_BOARD_SETTINGS(false)
+
+    },
+    updated() { // 자식 컴포넌트가 다 그려지고 나서 실행 됨
+      this.setCardDraggable()
+      this.setListDraggable()
+    },
     components: {
       List,
       BoardSetting,
@@ -42,6 +55,7 @@
         bid: 0,
         loading: false,
         cDragger: null,
+        lDragger: null,
         isEditTitle: false,
         inputTitle: ''
       }
@@ -52,17 +66,9 @@
         isShowBoardSettings: 'isShowBoardSettings'
       })
     },
-    created() {
-      this.fetchData().then(() => {
-        this.inputTitle = this.board.title
-        this.SET_THEME(this.board.bgColor)
-      })
-      this.SET_IS_SHOW_BOARD_SETTINGS(false)
-
-    },
     methods: {
       ...mapActions([
-        'FETCH_BOARD', 'UPDATE_CARD', 'UPDATE_BOARD'
+        'FETCH_BOARD', 'UPDATE_CARD', 'UPDATE_BOARD', 'UPDATE_LIST'
       ]),
       ...mapMutations(['SET_THEME', 'SET_IS_SHOW_BOARD_SETTINGS']),
       fetchData() {
@@ -93,6 +99,32 @@
         })
 
       },
+      setListDraggable() {
+        if (this.lDragger) this.lDragger.destroy()
+
+        const options = {invalid: (el, handle) => !/^list/.test(handle.className)}
+
+        this.lDragger = dragger.init(
+          Array.from(this.$el.querySelectorAll('.list-section')),
+        options)
+
+        this.lDragger.on('drop', (el, wrapper, target, siblings) => {
+          const targetList = {
+            id: el.dataset.listId * 1,
+            pos: 65535
+          }
+          const {prev, next} = dragger.siblings({
+            el: el,
+            wrapper: wrapper,
+            candidates: Array.from(wrapper.querySelectorAll('.list')),
+            type: 'list'})
+          if (!prev && next) targetList.pos = next.pos / 2
+          else if (!next && prev) targetList.pos = prev.pos * 2
+          else if (prev && next) targetList.pos = (prev.pos + next.pos) /2
+
+          this.UPDATE_LIST(targetList)
+        })
+      },
       onShowSettings() {
         this.SET_IS_SHOW_BOARD_SETTINGS(true)
       },
@@ -112,9 +144,6 @@
 
         this.UPDATE_BOARD({id, title})
       }
-    },
-    updated() {
-      this.setCardDraggable()
     }
   }
 

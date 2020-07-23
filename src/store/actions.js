@@ -54,6 +54,7 @@ const actions = {
     })
   },
   UPDATE_LIST({dispatch, state}, {id, pos, title}) {
+    console.info(id, title)
     return api.list.update(id, {pos, title}).then(() => {
       dispatch('FETCH_BOARD', {id: state.board.id})
     })
