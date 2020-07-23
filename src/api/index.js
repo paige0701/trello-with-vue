@@ -59,4 +59,16 @@ export const card = {
   }
 }
 
+export const list = {
+  create(title, boardId, pos) {
+    return request('post', `/lists`, {title, boardId, pos})
+  },
+  update(id, payload) {
+    return request('put', `/lists/${id}`, payload)
+  },
+  delete(id) {
+    return request('delete', `/lists/${id}`)
+  }
+}
+
 
