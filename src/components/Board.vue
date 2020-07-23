@@ -6,7 +6,7 @@
           <span class="board-title" v-if="!isEditTitle" @click="onClickTitle">{{board.title}}</span>
           <input class="form-control" type="text"
                  v-else v-model="inputTitle" ref="inputTitle" @blur="onSubmitTitle" @keyup.enter="onSubmitTitle">
-          <a href="" @click.prevent="onShowSettings" class="board-header-btn">... Show menu</a>
+          <a href="" @click.prevent="onShowSettings" class="board-header-btn show-menu">... Show menu</a>
         </div>
 
         <div class="list-section-wrapper">

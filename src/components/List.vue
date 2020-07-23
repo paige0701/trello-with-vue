@@ -8,6 +8,7 @@
              @blur="onBlurTitle"
              @keyup.enter="onSubmitTitle">
       <div class="list-header-title" v-else @click="onClickTitle">{{data.title}}</div>
+      <a href="" class="delete-list-btn" @click.prevent="onDeleteList">&times;</a>
     </div>
     <div class="card-list">
       <cardItem v-for="card in data.cards" :key="card.id" :data="card"></cardItem>
@@ -42,7 +43,7 @@
       }
     },
     methods: {
-      ...mapActions(['UPDATE_LIST']),
+      ...mapActions(['UPDATE_LIST', 'DELETE_LIST']),
       onClickTitle() {
         this.isEditTitle = true
         this.$nextTick(() => {
@@ -63,6 +64,10 @@
 
         if (title === this.data.title) return
         this.UPDATE_LIST({id, title})
+      },
+      onDeleteList() {
+        if (!window.confirm('Delete list?')) return
+        this.DELETE_LIST({id: this.data.id})
       }
     },
     created() {
@@ -107,7 +112,7 @@
   }
   .card-list {
     flex: 1 1 auto;
-    overflow-y: scroll;
+    /*overflow-y: scroll;*/
   }
   .empty-card-item   {
     height: 10px;
