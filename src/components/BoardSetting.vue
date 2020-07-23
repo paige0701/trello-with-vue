@@ -6,6 +6,16 @@
     </div>
     <ul class="menu-list">
       <li><a href="" @click.prevent="onDeleteBoard">Delete board</a></li>
+      <li><a href="" @click.prevent="onChangeBgColor">Change Background</a></li>
+      <div class="color-picker">
+        <a href="" data-value="red" @click.prevent="onChangeTheme"></a>
+        <a href="" data-value="orange" @click.prevent="onChangeTheme"></a>
+        <a href="" data-value="green" @click.prevent="onChangeTheme"></a>
+        <a href="" data-value="yellowgreen" @click.prevent="onChangeTheme"></a>
+        <a href="" data-value="pink" @click.prevent="onChangeTheme"></a>
+        <a href="" data-value="black" @click.prevent="onChangeTheme"></a>
+        <a href="" data-value="white" @click.prevent="onChangeTheme"></a>
+      </div>
     </ul>
   </div>
 </template>
@@ -20,9 +30,9 @@
     },
     methods: {
       ...mapMutations([
-        'SET_IS_SHOW_BOARD_SETTINGS'
+        'SET_IS_SHOW_BOARD_SETTINGS', 'SET_THEME'
       ]),
-      ...mapActions(['DELETE_BOARD']),
+      ...mapActions(['DELETE_BOARD', 'UPDATE_BOARD']),
       onClose() {
         this.SET_IS_SHOW_BOARD_SETTINGS(false)
       },
@@ -32,7 +42,20 @@
           .then(() => { this.SET_IS_SHOW_BOARD_SETTINGS(false)})
           .then(() => { this.$router.push('/')})
 
+      },
+      onChangeTheme(el) {
+        const id = this.board.id
+        const bgColor = el.target.dataset.value
+        this.UPDATE_BOARD({id, bgColor})
+          .then(() => {
+            this.SET_THEME(bgColor)
+          })
       }
+    },
+    mounted() {
+      Array.from(this.$el.querySelectorAll('.color-picker a')).forEach((i) => {
+        i.style.backgroundColor = i.dataset.value
+      })
     }
   }
 </script>
