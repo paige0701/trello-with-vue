@@ -40,7 +40,7 @@
         const title = this.inputTitle
         const boardId = this.board.id
         const lastList = this.board.lists[this.board.lists.length-1]
-        const pos = lastList.pos ? lastList.pos * 2 : 65535
+        const pos = lastList && lastList.pos ? lastList.pos * 2 : 65535
         this.ADD_LIST({title, boardId, pos}).then(() => {
           this.restore()
         })
