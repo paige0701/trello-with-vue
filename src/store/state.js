@@ -6,7 +6,10 @@ const state = {
   card: {},
   navbarColor: '#026aa7',
   bodyColor: '#ffffff',
-  isShowBoardSettings: false
+  isShowBoardSettings: false,
+  isShowBoardMenuBackBtn: false,
+  boardMenuName: 'Setting',
+  isShowMenuItems: true
 }
 
 export default state
