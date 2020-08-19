@@ -35,8 +35,8 @@ const mutations = {
   SET_IS_SHOW_BOARD_MENU_BACK_BTN(state, toggle) {
     state.isShowBoardMenuBackBtn = toggle
   },
-  SET_BOARD_MENU_NAME(state, name) {
-    state.boardMenuName = name
+  SET_CURRENT_BOARD_MENU(state, current) {
+    state.currentBoardMenu = current
   },
 }
 

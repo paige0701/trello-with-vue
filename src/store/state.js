@@ -8,8 +8,9 @@ const state = {
   bodyColor: '#ffffff',
   isShowBoardSettings: false,
   isShowBoardMenuBackBtn: false,
-  boardMenuName: 'Setting',
-  isShowMenuItems: true
+  currentBoardMenu: {name: 'Setting'},
+  isShowMenuItems: true,
+
 }
 
 export default state

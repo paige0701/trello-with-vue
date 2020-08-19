@@ -3,17 +3,17 @@
     <div class="board-menu-wrapper">
       <div class="board-menu-header">
         <div><a class="header-back-btn" href="" @click.prevent="onClickBackBtn()" v-if="isShowBoardMenuBackBtn">&leftarrow;</a></div>
-        <div class="header-title">{{boardMenuName}}</div>
+        <div class="header-title">{{currentBoardMenu.name}}</div>
         <div><a class="header-close-btn" href="" @click.prevent="onClose">&times;</a></div>
       </div>
       <div class="board-menu-container">
         <div class="board-menu-container-content">
-          <ul class="menu-list" v-if="boardMenuName === menuItems.setting">
+          <ul class="menu-list" v-if="currentBoardMenu.name === menuItems.setting.name">
             <li><a href="" @click.prevent="onClickItem(menuItems.about)">About this board</a></li>
             <li><a href="" @click.prevent="onClickItem(menuItems.background)">Change Background</a></li>
             <li><a href="" @click.prevent="onClickItem(menuItems.more)">more ...</a></li>
           </ul>
-          <div v-if="boardMenuName === menuItems.about">
+          <div v-if="currentBoardMenu.name === menuItems.about.name">
             <div class="about-this-board-section">
               <h3>Made by</h3>
             </div>
@@ -29,7 +29,15 @@
             </div>
 
           </div>
-          <div v-if="boardMenuName === menuItems.background">
+          <div v-if="currentBoardMenu.name === menuItems.background.name">
+            <div>
+              <ul class="menu-list">
+                <li><a href="" @click.prevent="onClickItem(menuItems.color)">Colours</a></li>
+                <li><a href="" @click.prevent="onClickItem(menuItems.photo)">Photos</a></li>
+              </ul>
+            </div>
+          </div>
+          <div class="background-color-content" v-if="currentBoardMenu.name === menuItems.color.name">
             <div class="color-picker">
               <a href="" data-value="red" @click.prevent="onChangeTheme"></a>
               <a href="" data-value="orange" @click.prevent="onChangeTheme"></a>
@@ -40,7 +48,10 @@
               <a href="" data-value="white" @click.prevent="onChangeTheme"></a>
             </div>
           </div>
-          <div v-if="boardMenuName === menuItems.more">
+          <div class="background-photo-content" v-if="currentBoardMenu.name === menuItems.photo.value">
+            unsplash API
+          </div>
+          <div v-if="currentBoardMenu.name === menuItems.more.name">
             <ul class="menu-list">
               <li><a href="" @click.prevent="onDeleteBoard">Delete board</a></li>
             </ul>
@@ -63,10 +74,12 @@
     data() {
       return {
         menuItems: {
-          'about' : 'About',
-          'background': 'Change Background',
-          'more': '& more',
-          'setting': 'Setting'
+          about : {name:'About'},
+          background: {name: 'Change Background'},
+          more: {name: '& more'},
+          setting: {name: 'Setting'},
+          color: {name: 'Colors'},
+          photo: {name:'Photos'},
         },
         isEditDesc: false
       }
@@ -75,7 +88,7 @@
       ...mapState({
         board: 'board',
         isShowBoardMenuBackBtn: 'isShowBoardMenuBackBtn',
-        boardMenuName: 'boardMenuName',
+        currentBoardMenu: 'currentBoardMenu',
       }),
       getBoardUrl() {
         return 'localhost:8080' + this.$route.fullPath
@@ -85,7 +98,7 @@
       ...mapMutations([
         'SET_IS_SHOW_BOARD_SETTINGS',
         'SET_THEME',
-        'SET_BOARD_MENU_NAME',
+        'SET_CURRENT_BOARD_MENU',
         'SET_IS_SHOW_BOARD_MENU_BACK_BTN'
       ]),
       ...mapActions(['DELETE_BOARD', 'UPDATE_BOARD']),
@@ -93,14 +106,14 @@
       onClose() {
         this.SET_IS_SHOW_BOARD_SETTINGS(false)
         this.SET_IS_SHOW_BOARD_MENU_BACK_BTN(false)
-        this.SET_BOARD_MENU_NAME(this.menuItems.setting)
+        this.SET_CURRENT_BOARD_MENU(this.menuItems.setting)
       },
       onClickItem(type) {
 
-        this.SET_BOARD_MENU_NAME(type)
+        this.SET_CURRENT_BOARD_MENU(type)
 
         this.$nextTick(() => {
-          if (type === this.menuItems.background) {
+          if (type === this.menuItems.color) {
             Array.from(this.$el.querySelectorAll('.color-picker a')).forEach((i) => {
               i.style.backgroundColor = i.dataset.value
             })
@@ -118,8 +131,8 @@
 
       },
       onClickBackBtn() {
-        this.SET_BOARD_MENU_NAME(this.menuItems.setting)
-        this.SET_IS_SHOW_BOARD_MENU_BACK_BTN(false)
+        this.SET_CURRENT_BOARD_MENU(this.currentBoardMenu.back? this.currentBoardMenu.back: this.menuItems.setting)
+        this.SET_IS_SHOW_BOARD_MENU_BACK_BTN(this.currentBoardMenu.name !== this.menuItems.setting.name)
       },
 
       onChangeTheme(el) {
@@ -136,6 +149,8 @@
     },
     mounted() {
       this.board.desc = 'this is desc'
+      this.menuItems.color.back = this.menuItems.background
+      this.menuItems.photo.back = this.menuItems.background
     }
   }
 </script>
