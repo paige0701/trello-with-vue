@@ -48,8 +48,9 @@
               <a href="" data-value="white" @click.prevent="onChangeTheme"></a>
             </div>
           </div>
-          <div class="background-photo-content" v-if="currentBoardMenu.name === menuItems.photo.value">
-            unsplash API
+          <div class="background-photo-content" v-if="currentBoardMenu.name === menuItems.photo.name">
+            <div class="photo-picker">
+            </div>
           </div>
           <div v-if="currentBoardMenu.name === menuItems.more.name">
             <ul class="menu-list">
@@ -62,6 +63,7 @@
             </form>
           </div>
         </div>
+
       </div>
     </div>
   </div>
@@ -79,7 +81,7 @@
           more: {name: '& more'},
           setting: {name: 'Setting'},
           color: {name: 'Colors'},
-          photo: {name:'Photos'},
+          photo: {name:'Photos by unsplash'},
         },
         isEditDesc: false
       }
@@ -89,6 +91,7 @@
         board: 'board',
         isShowBoardMenuBackBtn: 'isShowBoardMenuBackBtn',
         currentBoardMenu: 'currentBoardMenu',
+        unsplashPhotos: 'unsplashPhotos'
       }),
       getBoardUrl() {
         return 'localhost:8080' + this.$route.fullPath
@@ -99,9 +102,9 @@
         'SET_IS_SHOW_BOARD_SETTINGS',
         'SET_THEME',
         'SET_CURRENT_BOARD_MENU',
-        'SET_IS_SHOW_BOARD_MENU_BACK_BTN'
+        'SET_IS_SHOW_BOARD_MENU_BACK_BTN',
       ]),
-      ...mapActions(['DELETE_BOARD', 'UPDATE_BOARD']),
+      ...mapActions(['DELETE_BOARD', 'UPDATE_BOARD','FETCH_UNSPLASH_PHOTOS']),
 
       onClose() {
         this.SET_IS_SHOW_BOARD_SETTINGS(false)
@@ -112,13 +115,25 @@
 
         this.SET_CURRENT_BOARD_MENU(type)
 
-        this.$nextTick(() => {
-          if (type === this.menuItems.color) {
+        if (type === this.menuItems.color) {
+          this.$nextTick(() => {
             Array.from(this.$el.querySelectorAll('.color-picker a')).forEach((i) => {
               i.style.backgroundColor = i.dataset.value
             })
-          }
-        })
+          })
+        } else if (type === this.menuItems.photo) {
+          this.FETCH_UNSPLASH_PHOTOS().then(() => {
+            let pp = document.querySelector('.photo-picker');
+            this.unsplashPhotos[0].forEach((item) => {
+              let aT = document.createElement("div")
+              let iT = document.createElement("img");
+              iT.src = item.urls.small
+              aT.appendChild(iT)
+              pp.appendChild(aT)
+            })
+
+          })
+        }
 
         this.SET_IS_SHOW_BOARD_MENU_BACK_BTN(true)
       },
@@ -231,12 +246,26 @@
     text-decoration: none;
     color: inherit;
   }
-  .color-picker {
+  .color-picker, .photo-picker{
     margin: 0 15px;
+
   }
   .color-picker a {
     display: inline-block;
     width: 49%;
+    height: 100px;
+    border-radius: 8px;
+  }
+  .photo-picker div > img{
+    display: inline-block;
+    width: 95%;
+    height: 100px;
+    border-radius: 8px;
+  }
+
+  .photo-picker div {
+    display: inline-block;
+    width: 50%;
     height: 100px;
     border-radius: 8px;
   }

@@ -71,4 +71,20 @@ export const list = {
   }
 }
 
+export const unsplash = {
+  fetch() {
+    return axios({
+      method: 'get',
+      url : `https://api.unsplash.com/photos/random/?client_id=${CLIENT_ID}&count=20`,
+      data: ''
+    }).then(result =>  result.data)
+      .catch(result => {
+        const {status} = result.response
+        if (status === UNAUTHORIZED) onUnauthorized()
+        throw result.response
+      })
+  }
+
+}
+
 

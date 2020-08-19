@@ -63,8 +63,12 @@ const actions = {
     return api.list.delete(id).then(() => {
       dispatch('FETCH_BOARD', {id: state.board.id})
     })
+  },
+  FETCH_UNSPLASH_PHOTOS({commit}) {
+    return api.unsplash.fetch().then((result) => {
+      commit('SET_UNSPLASH_PHOTOS', result)
+    })
   }
-
 }
 
 export default actions

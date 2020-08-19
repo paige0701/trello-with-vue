@@ -38,6 +38,10 @@ const mutations = {
   SET_CURRENT_BOARD_MENU(state, current) {
     state.currentBoardMenu = current
   },
+
+  SET_UNSPLASH_PHOTOS(state, photos) {
+    state.unsplashPhotos.push(photos)
+  }
 }
 
 export default mutations

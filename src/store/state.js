@@ -10,6 +10,7 @@ const state = {
   isShowBoardMenuBackBtn: false,
   currentBoardMenu: {name: 'Setting'},
   isShowMenuItems: true,
+  unsplashPhotos: []
 
 }
 
